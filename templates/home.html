@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Focus Logistics | Track & Manage Loads Cross Country!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="hero-container">
+        <h1 class="hello">Manage all you logistics needs!</h1>
+        <img src="/static/images/truck.jpg" alt="row of trucks on road" class="hero-img">
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h2 class="my-5">Key Benefits:</h2>
+    </div>
+    <div class="row justify-content-between align-items-center">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row justify-content-center">
+                    <i class="fas fa-truck-moving feature text-white"></i>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">Track Loads</h5>
+                <p class="card-text text-center">No more using spreadsheets to track your loads cross country.</p>
+            </div>
+        </div>
+        <div class="card my-2">
+            <div class="card-header bg-primary">
+                <div class="row justify-content-center">
+                    <i class="fas fa-chart-line text-white feature"></i>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">Data Analytics</h5>
+                <p class="card-text text-center">See how much you're spending on trips, load data and more.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

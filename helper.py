@@ -1,0 +1,1 @@
+'''Below are functions that help with app functionality.'''
