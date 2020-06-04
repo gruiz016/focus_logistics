@@ -51,6 +51,7 @@ class DistributionCenter(db.Model):
     '''Creates a DC (load destination) table in SQLAlchemy & PostgreSQL.'''    
     
     __tablename__ = 'distribution_centers'
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)  
     name = db.Column(db.Text, unique=True, nullable=False)
     address = db.Column(db.Text, unique=True, nullable=False)
@@ -69,4 +70,26 @@ class DistributionCenter(db.Model):
     def __repr__(self):
         return f'<DC id:{self.id}, name: {self.name}>'
     
+class Carrier(db.Model):
+    '''Creates a carrier table in SQLAlchemy & PostgreSQL.'''
+    
+    __tablename__ = 'carriers'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
+    name = db.Column(db.Text, unique=True, nullable=False)
+    address = db.Column(db.Text, unique=True, nullable=False)
+    city = db.Column(db.Text, nullable=False)
+    zip = db.Column(db.Text, nullable=False)
+    phone = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    @classmethod
+    def get_carrier_by_user(cls, user_id):
+        '''Gets a list of distrubution centers that is linked to user.'''
+        
+        carriers = cls.query.filter_by(user_id=user_id).all()
+        return carriers
+    
+    def __repr__(self):
+        return f'<Carrier. id:{self.id}, name: {self.name}>'
     
