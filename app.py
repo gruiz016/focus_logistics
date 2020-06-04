@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
-from models import db, connect_db
+from models import db, connect_db, User
 import requests
 import os
 

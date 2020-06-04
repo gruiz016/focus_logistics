@@ -3,37 +3,56 @@
 {% block title %}Focus Logistics | Track & Manage Loads Cross Country!{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="hero-container">
-        <h1 class="hello">Manage all you logistics needs!</h1>
-        <img src="/static/images/truck.jpg" alt="row of trucks on road" class="hero-img">
-    </div>
-</div>
-<div class="container">
-    <div class="row justify-content-center">
-        <h2 class="my-5">Key Benefits:</h2>
-    </div>
-    <div class="row justify-content-between align-items-center">
-        <div class="card">
-            <div class="card-header bg-primary">
-                <div class="row justify-content-center">
-                    <i class="fas fa-truck-moving feature text-white"></i>
-                </div>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">Track Loads</h5>
-                <p class="card-text text-center">No more using spreadsheets to track your loads cross country.</p>
+<div id="home">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-sm-3"></div>
+            <div class="col-md-7 col-sm-9">
+                <h1>Manage Your Fleet!</h1>
             </div>
         </div>
-        <div class="card my-2">
-            <div class="card-header bg-primary">
-                <div class="row justify-content-center">
-                    <i class="fas fa-chart-line text-white feature"></i>
+    </div>
+</div>
+
+<div class="divider">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="divider-wrapper divider-one">
+                    <i class="fas fa-truck-moving feature"></i>
+                    <h2>Track</h2>
+                    <p>Track all your inbound shipments all across the country in one convenient place. Manage loads, costs, miles and more...</p>
                 </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">Data Analytics</h5>
-                <p class="card-text text-center">See how much you're spending on trips, load data and more.</p>
+            <div class="col-md-4 col-sm-6">
+                <div class="divider-wrapper divider-two">
+                    <i class="fas fa-chart-line feature"></i>
+                    <h2>Useful Data</h2>
+                    <p>See how your fleet is doing with simple data analytics. Analysis on cost per mile, on-time percentages and more...</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="divider-wrapper divider-three">
+                    <i class="fas fa-file-csv feature"></i>
+                    <h2>Spreedsheets</h2>
+                    <p>No more using spreadsheets/excel to update locations, track miles, report breakdowns, track data and much more...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <img src="/static/images/man.jpg" class="img-responsive" alt="about img">
+            </div>
+            <div class="col-md-6 col-sm-12 about-des">
+                <h2>Focus YOUR Logistics</h2>
+                <p>This is a capstone project developed by <a href="https://www.linkedin.com/in/giovanniruiz01/">Giovanni Ruiz</a>. Although this is for educational purposes, this Flask application was set out to address real world problems. Helping small/startup companies manage fleets across the country.</p>
+                <p>We address companies/logistics managers needs to move there tracking methods from using excel spreadsheets to a web a platform. The benefits are better visibility, automated distance calculations, and built in data analytics.</p>
+                <a href="about.html" class="btn btn-default">Signup</a>
             </div>
         </div>
     </div>

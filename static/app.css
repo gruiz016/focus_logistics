@@ -3,26 +3,12 @@ body {
     width: 100vw;
 }
 
-.hero-container {
-    position: relative;
-    text-align: center;
-    color: white;
-  }
-
-.hero-img {
-    height: 100%;
-    width: 100%;
-    filter: grayscale(1);
-}
-
-.hello {
-    position: absolute;
-    bottom: 0;
-    left: 2rem;
-    z-index: 1;
-    font-size: 1.4rem;
-}
-
 .feature {
-    font-size: 3rem;
+    font-size: 5rem;
+}
+
+.navbar-brand {
+    font-size: 3rem !important;
+    color: white !important;
+    margin-top: 1rem !important;
 }
