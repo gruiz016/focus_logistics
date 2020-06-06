@@ -4,17 +4,42 @@
 
 {% block content %}
 
-<div class="container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<div class="container locations">
+    <h1 class="my-3">Your Distribution Centers!</h1>
+    <table class="table tabke-light">
+        <thead>
+            <tr>
+                <th scope="col" class="text-white">Name</th>
+                <th scope="col" class="text-white">Address</th>
+                <th scope="col" class="text-white">City</th>
+                <th scope="col" class="text-white">State</th>
+                <th scope="col" class="text-white">Zip</th>
+                <th scope="col" class="text-white">Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in dc %}
+            <tr> 
+                <td class="text-white">{{location.name}}</td>
+                <td class="text-white">{{location.address}}</td>
+                <td class="text-white">{{location.city}}</td>
+                <td class="text-white">{{location.state}}</td>
+                <td class="text-white">{{location.zip}}</td>
+                <td class="text-white">{{location.phone}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDcModal">
         Add A D.C.
     </button>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="addDcModal" tabindex="-1" role="dialog" aria-labelledby="addDcModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="addDcModalLabel">Add Your Location!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -39,7 +64,7 @@
 
                         {% endfor %}
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary location-btn">Submit</button>
                     </form>
                 </div>
             </div>

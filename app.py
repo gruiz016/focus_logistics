@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
 from forms import LoginForm, SignupForm, DistributionCenterForm
+from helper import check_if_logged_in
 import requests
 import os
 
@@ -63,8 +64,6 @@ def signup():
             db.session.commit()
             flash(f'{username} was created!', 'alert-success')
             return redirect('/manage')
-        else:
-            flash('Something went wrong, please try again!', 'alert-danger')
     return render_template('signup.html', form=form)
 
 @app.route('/logout', methods=['POST'])
@@ -80,6 +79,7 @@ def logout():
 
 @app.route('/manage')
 def user_portal():
+    '''Renders the user portal.'''
     # Checks if user has been autherized prior to allowing entrance to route.
     if 'user_id' not in session:
         flash('You must be logged to access', 'alert-danger')
@@ -88,5 +88,28 @@ def user_portal():
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
+    '''Renders and handles DC locations users add.'''
+    # Checks if user has been autherized prior to allowing entrance to route.
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')
+    
     form = DistributionCenterForm()
-    return render_template('user/locations.html', form=form)
+    # Grabs all user DC locations
+    dc = DistributionCenter.get_dist_by_user(user_id=session['user_id'])
+    if form.validate_on_submit():
+        name = form.name.data
+        address = form.address.data
+        city = form.city.data
+        state = form.state.data
+        zip = form.zip.data
+        phone = form.phone.data
+        # Creates a new DC location
+        dc = DistributionCenter(name=name, address=address, city=city, state=state, zip=zip, phone=phone, user_id=session['user_id'])
+        # If location was created, we commit.
+        if dc:
+            db.session.add(dc)
+            db.session.commit()
+            flash('Location created!', 'alert-success')
+            return redirect('/locations')
+    return render_template('user/locations.html', form=form, dc=dc)

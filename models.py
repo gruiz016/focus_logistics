@@ -63,8 +63,9 @@ class DistributionCenter(db.Model):
     name = db.Column(db.Text, unique=True, nullable=False)
     address = db.Column(db.Text, unique=True, nullable=False)
     city = db.Column(db.Text, nullable=False)
+    state = db.Column(db.Text, nullable=False)
     zip = db.Column(db.Text, nullable=False)
-    phone = db.Column(db.Integer, nullable=False)
+    phone = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     @classmethod
@@ -89,6 +90,7 @@ class Carrier(db.Model):
     name = db.Column(db.Text, unique=True, nullable=False)
     address = db.Column(db.Text, unique=True, nullable=False)
     city = db.Column(db.Text, nullable=False)
+    state = db.Column(db.Text, nullable=False)
     zip = db.Column(db.Text, nullable=False)
     phone = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

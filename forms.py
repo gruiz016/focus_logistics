@@ -22,5 +22,5 @@ class DistributionCenterForm(FlaskForm):
     address = StringField('Street Address', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
     state = SelectField('State', choices=[(st, st) for st in states])
-    zip = IntegerField('Zip Code', validators=[Length(min=6, max=6, message='Please enter valid zip code.')])
-    phone = IntegerField('Phone Number', validators=[Length(min=10, max=10, message='Please enter phone number with no dashes.')])
+    zip = StringField('Zip Code')
+    phone = IntegerField('Phone Number')
