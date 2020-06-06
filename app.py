@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
-from forms import LoginForm, SignupForm
+from forms import LoginForm, SignupForm, DistributionCenterForm
 import requests
 import os
 
@@ -85,3 +85,8 @@ def user_portal():
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     return render_template('user/portal.html')
+
+@app.route('/locations', methods=['GET', 'POST'])
+def locations():
+    form = DistributionCenterForm()
+    return render_template('user/locations.html', form=form)

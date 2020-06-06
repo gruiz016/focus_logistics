@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Your Distribution Centers Here!{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Add A D.C.
+    </button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {% for field in form
+                           if field.widget.input_type != 'hidden' %}
+
+                        <p class="form-group">
+                            {{ field.label }}
+                            {{ field (class_="form-control")}}
+
+                            {% for error in field.errors %}
+                            <span class="form-text text-danger m-0">
+                                {{ error }}
+                            </span>
+                            {% endfor %}
+                        </p>
+
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
