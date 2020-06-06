@@ -116,7 +116,7 @@ class Load(db.Model):
     name = db.Column(db.Text, nullable=False)   
     pickup_city = db.Column(db.Text, nullable=False)   
     pickup_zip = db.Column(db.Text, nullable=False)
-    due_date = db.Column(db.Date, nullable=True)
+    due_date = db.Column(db.Text, nullable=True)
     temp = db.Column(db.Integer, nullable=False)
     team = db.Column(db.Integer, nullable=False)
     carrier_id = db.Column(db.Integer, db.ForeignKey('carriers.id'), nullable=False)
