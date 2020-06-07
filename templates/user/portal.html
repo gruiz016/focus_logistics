@@ -1,1 +1,136 @@
 {% extends 'base.html' %}
+
+{% block title %}Your Loads {% endblock %}
+
+{% block content %}
+
+<div class="container locations">
+    <h1 class="my-3">Your Loads!</h1>
+    <table class="table tabke-light">
+        <thead>
+            <tr>
+                <th scope="col" class="text-white">P.O.</th>
+                <th scope="col" class="text-white">Name</th>
+                <th scope="col" class="text-white">City, State</th>
+                <th scope="col" class="text-white">Miles</th>
+                <th scope="col" class="text-white">Day Due</th>
+                <th scope="col" class="text-white">Required Date</th>
+                <th scope="col" class="text-white">Temp</th>
+                <th scope="col" class="text-white">Team</th>
+                <th scope="col" class="text-white">Update Location</th>
+                <th scope="col" class="text-white">Load Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for load in loads %}
+            <tr>
+                <td class="text-white">{{load.po}}</td>
+                <td class="text-white">{{load.name}}</td>
+                <td class="text-white">{{load.pickup_city}}, {{load.pickup_state}}</td>
+                <td class="text-white">{{load.miles}}</td>
+                <td class="text-white">{{load.due_date}}</td>
+                <td class="text-white">{{load.day_of_week}}</td>
+                <td class="text-white">{{load.temp}}</td>
+                <td class="text-white">{{load.team}}</td>
+                <td class="text-white">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#update-location">
+                        Edit
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="update-location" tabindex="-1" role="dialog"
+                        aria-labelledby="update-locationLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="update-locationLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-white">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#load-data">
+                        Add
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="load-data" tabindex="-1" role="dialog"
+                        aria-labelledby="load-dataLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="load-dataLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDcModal">
+        Add A Load
+    </button>
+
+    <div class="modal fade" id="addDcModal" tabindex="-1" role="dialog" aria-labelledby="addDcModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDcModalLabel">Add Your Load!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {% for field in form
+                           if field.widget.input_type != 'hidden' %}
+
+                        <p class="form-group">
+                            {{ field.label }}
+                            {{ field (class_="form-control")}}
+
+                            {% for error in field.errors %}
+                            <span class="form-text text-danger m-0">
+                                {{ error }}
+                            </span>
+                            {% endfor %}
+                        </p>
+
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary location-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

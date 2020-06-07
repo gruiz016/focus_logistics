@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Your Carriers Here!{% endblock %}
+
+{% block content %}
+
+<div class="container locations">
+    <h1 class="my-3">Your Carriers!</h1>
+    <table class="table tabke-light">
+        <thead>
+            <tr>
+                <th scope="col" class="text-white">Name</th>
+                <th scope="col" class="text-white">Address</th>
+                <th scope="col" class="text-white">City</th>
+                <th scope="col" class="text-white">State</th>
+                <th scope="col" class="text-white">Zip</th>
+                <th scope="col" class="text-white">Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for carrier in carriers %}
+            <tr> 
+                <td class="text-white">{{carrier.name}}</td>
+                <td class="text-white">{{carrier.address}}</td>
+                <td class="text-white">{{carrier.city}}</td>
+                <td class="text-white">{{carrier.state}}</td>
+                <td class="text-white">{{carrier.zip}}</td>
+                <td class="text-white">{{carrier.phone}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDcModal">
+        Add A Carrier
+    </button>
+
+    <div class="modal fade" id="addDcModal" tabindex="-1" role="dialog" aria-labelledby="addDcModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDcModalLabel">Add Your Carrier!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {% for field in form
+                           if field.widget.input_type != 'hidden' %}
+
+                        <p class="form-group">
+                            {{ field.label }}
+                            {{ field (class_="form-control")}}
+
+                            {% for error in field.errors %}
+                            <span class="form-text text-danger m-0">
+                                {{ error }}
+                            </span>
+                            {% endfor %}
+                        </p>
+
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary location-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

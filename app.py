@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
-from forms import LoginForm, SignupForm, DistributionCenterForm
-from helper import check_if_logged_in
+from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm
+from helper import get_user_carriers, get_dc
 import requests
 import os
 
@@ -84,7 +84,16 @@ def user_portal():
     if 'user_id' not in session:
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
-    return render_template('user/portal.html')
+    # 
+    loads = Load.query.all()
+    tup_carriers = get_user_carriers()
+    tup_dc = get_dc()
+    form = LoadForm()
+    form.carrier_id.choices = tup_carriers
+    form.d_c_id.choices = tup_dc
+    # 
+    
+    return render_template('user/portal.html', form=form, loads=loads)
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
@@ -94,7 +103,7 @@ def locations():
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     
-    form = DistributionCenterForm()
+    form = DCCarrierForm()
     # Grabs all user DC locations
     dc = DistributionCenter.get_dist_by_user(user_id=session['user_id'])
     if form.validate_on_submit():
@@ -113,3 +122,30 @@ def locations():
             flash('Location created!', 'alert-success')
             return redirect('/locations')
     return render_template('user/locations.html', form=form, dc=dc)
+
+@app.route('/carriers', methods=['GET', 'POST'])
+def carriers():
+    '''Renders and handles carriers the user adds.'''
+    # Checks if user has been autherized prior to allowing entrance to route.
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')
+    form = DCCarrierForm()
+    # Grabs all the carrier information.
+    carriers = Carrier.get_carrier_by_user(user_id=session['user_id'])
+    if form.validate_on_submit():
+        name = form.name.data
+        address = form.address.data
+        city = form.city.data
+        state = form.state.data
+        zip = form.zip.data
+        phone = form.phone.data
+        # Creates a carrier.
+        carrier = Carrier(name=name, address=address, city=city, state=state, zip=zip, phone=phone, user_id=session['user_id'])
+        # If carrier was created we commit it.
+        if carrier:
+            db.session.add(carrier)
+            db.session.commit()
+            flash('Carrier created!', 'alert-success')
+            return redirect('/carriers')
+    return render_template('user/carriers.html', form=form, carriers=carriers)

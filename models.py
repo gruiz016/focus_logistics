@@ -92,7 +92,7 @@ class Carrier(db.Model):
     city = db.Column(db.Text, nullable=False)
     state = db.Column(db.Text, nullable=False)
     zip = db.Column(db.Text, nullable=False)
-    phone = db.Column(db.Integer, nullable=False)
+    phone = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     @classmethod
@@ -114,13 +114,16 @@ class Load(db.Model):
     
     __tablename__ = 'loads'
     
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    po = db.Column(db.Text, unique=True, nullable=False)
     name = db.Column(db.Text, nullable=False)   
     pickup_city = db.Column(db.Text, nullable=False)   
-    pickup_zip = db.Column(db.Text, nullable=False)
+    pickup_state = db.Column(db.Text, nullable=False)
     due_date = db.Column(db.Text, nullable=True)
+    day_of_week = db.Column(db.Text, nullable=True)
     temp = db.Column(db.Integer, nullable=False)
     team = db.Column(db.Integer, nullable=False)
+    miles = db.Column(db.Integer, nullable=False, default=0)
     carrier_id = db.Column(db.Integer, db.ForeignKey('carriers.id'), nullable=False)
     d_c_id = db.Column(db.Integer, db.ForeignKey('distribution_centers.id'), nullable=False)
     
