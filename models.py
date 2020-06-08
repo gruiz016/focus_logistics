@@ -124,6 +124,7 @@ class Load(db.Model):
     temp = db.Column(db.Integer, nullable=False)
     team = db.Column(db.Integer, nullable=False)
     miles = db.Column(db.Integer, nullable=False, default=0)
+    delivered = db.Column(db.Integer, default=0)
     carrier_id = db.Column(db.Integer, db.ForeignKey('carriers.id'), nullable=False)
     d_c_id = db.Column(db.Integer, db.ForeignKey('distribution_centers.id'), nullable=False)
     
@@ -162,7 +163,6 @@ class LoadData(db.Model):
     ontime = db.Column(db.Integer, default=0)
     damges = db.Column(db.Integer, default=0)
     breakdown = db.Column(db.Integer, default=0)
-    delivered = db.Column(db.Integer, default=0)
     # Normal Int values
     cost = db.Column(db.Integer, default=0)
     pallets = db.Column(db.Integer, default=0)

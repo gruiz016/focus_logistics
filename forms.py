@@ -37,8 +37,8 @@ class LoadForm(FlaskForm):
     state = SelectField('State', choices=[(st, st) for st in states])
     due_date = DateField('Due Date', validators=[DataRequired()], format='%m/%d/%Y')
     day_of_week = SelectField('Day Of Week', choices=[(d, d) for d in days])
-    temp = IntegerField('Temperture', validators=[DataRequired()])
-    team = SelectField('Team', choices=[c for c in choice])
-    carrier_id = SelectField('Carrier')
-    d_c_id = SelectField('Distribution Center')
+    temp = IntegerField('Temperture (F)', validators=[DataRequired()])
+    team = SelectField('Team', choices=[c for c in choice], coerce=int)
+    carrier_id = SelectField('Carrier', coerce=int)
+    d_c_id = SelectField('Distribution Center', coerce=int)
     

@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
 from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm
-from helper import get_user_carriers, get_dc
-import requests
+from helper import get_user_carriers, get_dc, get_miles
 import os
+from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
 
 app = Flask(__name__)
 
@@ -11,6 +11,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'This_is_a_secret!')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['CONSUMER_KEY'] = os.environ.get('CONSUMER_KEY', MAP_QUEST_KEY)
+app.config['CONSUMER_SECRET'] = os.environ.get('CONSUMER_SECRET', MAP_QUEST_SECRET)
 
 connect_db(app)
 
@@ -77,22 +79,42 @@ def logout():
 # USER VIEWS
 # 
 
-@app.route('/manage')
+@app.route('/manage', methods=['GET', 'POST'])
 def user_portal():
     '''Renders the user portal.'''
     # Checks if user has been autherized prior to allowing entrance to route.
     if 'user_id' not in session:
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
-    # 
+    # Grabs all loads.
     loads = Load.query.all()
+    # Sets forms carrier and DC options.
     tup_carriers = get_user_carriers()
     tup_dc = get_dc()
+    # Selectfield form values.
     form = LoadForm()
     form.carrier_id.choices = tup_carriers
     form.d_c_id.choices = tup_dc
-    # 
-    
+    if form.validate_on_submit():
+        po = form.po.data
+        name = form.name.data
+        city = form.city.data
+        state = form.state.data
+        due_date = form.due_date.data
+        day_of_week = form.day_of_week.data
+        temp = form.temp.data
+        team = form.team.data
+        carrier_id = form.carrier_id.data
+        d_c_id = form.d_c_id.data
+        # Calls MapQuest API to get distance
+        miles = get_miles(app=app.config['CONSUMER_KEY'], dc_id=d_c_id, city=city, state=state)
+        # Creates load object 
+        load = Load(po=po, name=name, pickup_city=city, pickup_state=state, due_date=due_date, day_of_week=day_of_week, temp=temp, team=team, miles=miles, carrier_id=carrier_id, d_c_id=d_c_id)
+        if load:
+            db.session.add(load)
+            db.session.commit()
+            flash('Load created!', 'alert-success')
+            return redirect('/manage')
     return render_template('user/portal.html', form=form, loads=loads)
 
 @app.route('/locations', methods=['GET', 'POST'])

@@ -4,17 +4,17 @@
 
 {% block content %}
 
-<div class="container locations">
+<div class="fluid-container locations">
     <h1 class="my-3">Your Loads!</h1>
     <table class="table tabke-light">
         <thead>
             <tr>
-                <th scope="col" class="text-white">P.O.</th>
-                <th scope="col" class="text-white">Name</th>
-                <th scope="col" class="text-white">City, State</th>
-                <th scope="col" class="text-white">Miles</th>
-                <th scope="col" class="text-white">Day Due</th>
+                <th scope="col" class="text-white">P.O. #</th>
+                <th scope="col" class="text-white">Load Name</th>
+                <th scope="col" class="text-white">Current Location</th>
+                <th scope="col" class="text-white">Miles Out</th>
                 <th scope="col" class="text-white">Required Date</th>
+                <th scope="col" class="text-white">Day Due</th>
                 <th scope="col" class="text-white">Temp</th>
                 <th scope="col" class="text-white">Team</th>
                 <th scope="col" class="text-white">Update Location</th>
@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for load in loads %}
+            {% for load in loads|sort(attribute='due_date,miles') %}
             <tr>
                 <td class="text-white">{{load.po}}</td>
                 <td class="text-white">{{load.name}}</td>
@@ -30,63 +30,17 @@
                 <td class="text-white">{{load.miles}}</td>
                 <td class="text-white">{{load.due_date}}</td>
                 <td class="text-white">{{load.day_of_week}}</td>
-                <td class="text-white">{{load.temp}}</td>
-                <td class="text-white">{{load.team}}</td>
+                <td class="text-white">{{load.temp}}&deg;F</td>
+                {% if load.team == 0 %}
+                <td class="text-white">No</td>
+                {% else %}
+                <td class="text-white">Yes</td>
+                {% endif %}
                 <td class="text-white">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#update-location">
-                        Edit
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="update-location" tabindex="-1" role="dialog"
-                        aria-labelledby="update-locationLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="update-locationLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="/update_location" class="btn btn-primary">Update</a>
                 </td>
                 <td class="text-white">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#load-data">
-                        Add
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="load-data" tabindex="-1" role="dialog"
-                        aria-labelledby="load-dataLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="load-dataLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="/add_data" class="btn btn-primary">Add/Edit</a>
                 </td>
             </tr>
             {% endfor %}
