@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
-from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm
+from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm, UpdateLocationForm, LoadDataForm
 from helper import get_user_carriers, get_dc, get_miles
 import os
 from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
@@ -171,3 +171,47 @@ def carriers():
             flash('Carrier created!', 'alert-success')
             return redirect('/carriers')
     return render_template('user/carriers.html', form=form, carriers=carriers)
+
+@app.route('/update_location/<int:load_id>', methods=['GET', 'POST'])
+def update_location(load_id):
+    '''Renders and handles updates to load locations.'''
+    # Checks if user has been autherized prior to allowing entrance to route.
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')    
+    form = UpdateLocationForm()
+    load = Load.query.filter_by(id=load_id).first()
+    if form.validate_on_submit():
+        load.pickup_city = form.city.data
+        load.pickup_state = form.state.data
+        load.miles = get_miles(app=app.config['CONSUMER_KEY'], dc_id=load.d_c_id, city=load.pickup_city, state=load.pickup_state)
+        # Commits changes.
+        db.session.commit()
+        flash('Load updated', 'alert-success')
+        return redirect('/manage')
+    return render_template('user/update.html', form=form)
+
+@app.route('/add_data/<int:load_id>', methods=['GET', 'POST'])
+def add_load_data(load_id):
+    '''Renders and handles adding load data for each load.'''
+    # Checks if user has been autherized prior to allowing entrance to route.
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')    
+    form = LoadDataForm()
+    if form.validate_on_submit():
+        ontime = form.ontime.data
+        damges = form.damages.data
+        breakdown = form.breakdown.data
+        cost = form.cost.data
+        pallets = form.pallets.data
+        weight = form.weight.data
+        # Creates load data object
+        data = LoadData(load_id=load_id, user_id=session['user_id'], ontime=ontime, damges=damges, breakdown=breakdown, cost=cost, pallets=pallets, weight=weight)
+        # Confirms object was created before we commit.
+        if data:
+            db.session.add(data)
+            db.session.commit()
+            flash('Load Data added.', 'alert-success')
+            return redirect('/manage')
+    return render_template('user/load_data.html', form=form)

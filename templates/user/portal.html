@@ -5,7 +5,12 @@
 {% block content %}
 
 <div class="fluid-container locations">
-    <h1 class="my-3">Your Loads!</h1>
+    <h1>Your Loads...</h1>
+    <div class="header">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDcModal">
+            Add A Load
+        </button>
+    </div>
     <table class="table tabke-light">
         <thead>
             <tr>
@@ -37,18 +42,15 @@
                 <td class="text-white">Yes</td>
                 {% endif %}
                 <td class="text-white">
-                    <a href="/update_location" class="btn btn-primary">Update</a>
+                    <a href="/update_location/{{load.id}}" class="btn btn-primary">Update</a>
                 </td>
                 <td class="text-white">
-                    <a href="/add_data" class="btn btn-primary">Add/Edit</a>
+                    <a href="/add_data/{{load.id}}" class="btn btn-primary">Add/Edit</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDcModal">
-        Add A Load
-    </button>
 
     <div class="modal fade" id="addDcModal" tabindex="-1" role="dialog" aria-labelledby="addDcModalLabel"
         aria-hidden="true">

@@ -42,3 +42,15 @@ class LoadForm(FlaskForm):
     carrier_id = SelectField('Carrier', coerce=int)
     d_c_id = SelectField('Distribution Center', coerce=int)
     
+class UpdateLocationForm(FlaskForm):
+    city = StringField('City', validators=[DataRequired()])
+    state = SelectField('State', choices=[(st, st) for st in states])
+    
+class LoadDataForm(FlaskForm):
+    ontime = SelectField('Was load ontime?', choices=[c for c in choice], coerce=int)
+    damages = SelectField('Any damages?', choices=[c for c in choice], coerce=int)
+    breakdown = SelectField('Any breakdowns?', choices=[c for c in choice], coerce=int)
+    cost = IntegerField('Price (USD $)', validators=[DataRequired()])
+    pallets = IntegerField('Pallets', validators=[DataRequired()])
+    weight = IntegerField('Weight (LBS)', validators=[DataRequired()])
+    

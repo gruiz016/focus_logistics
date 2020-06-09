@@ -40,3 +40,10 @@ body {
 .location-btn {
     background: #009988;
 }
+
+.header {
+    width: 95%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 2rem;
+}
