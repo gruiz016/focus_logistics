@@ -47,3 +47,36 @@ body {
     justify-content: flex-end;
     margin: 2rem;
 }
+
+.kpi {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.item {
+    width: 20rem;
+    height: 20rem;
+    border: solid 3px #009988;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: .3rem .5rem;
+}
+
+.item h2 {
+    color: black;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.item p {
+    color: #009988;
+    font-size: 4rem;
+    margin: 0;
+}

@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
 from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm, UpdateLocationForm, LoadDataForm
-from helper import get_user_carriers, get_dc, get_miles
+from helper import get_user_carriers, get_dc, get_miles, ontime_KPI, damages_KPI, breakdown_KPI, avg_cost_load, cost_per_pallet, cost_per_lbs
 import os
 from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
 
@@ -223,9 +223,21 @@ def completed(load_id):
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     load = Load.query.filter_by(id=load_id).first()
+    load_data = LoadData.query.filter_by(id=load_id).first()
     # Changes the delivered status.
     load.delivered = 1
+    load_data.delivered = 1
     # Commits the change.
     db.session.commit()
     flash('Load delivered!', 'alert-success')
     return redirect('/manage')   
+
+@app.route('/kpi')
+def show_kpi():
+    ontime = ontime_KPI()
+    breakdown = breakdown_KPI()
+    damages = damages_KPI()
+    avg_load_cost = avg_cost_load()
+    pallet_cost = cost_per_pallet()
+    weight_cost = cost_per_lbs()
+    return render_template('user/kpi.html', ontime=ontime, breakdown=breakdown, damages=damages, avg_load=avg_load_cost, avg_pallet=pallet_cost, avg_weight=weight_cost)

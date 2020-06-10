@@ -168,6 +168,7 @@ class LoadData(db.Model):
     cost = db.Column(db.Integer, default=0)
     pallets = db.Column(db.Integer, default=0)
     weight = db.Column(db.Integer, default=0)
+    delivered = db.Column(db.Integer, default=0)
     
     @classmethod
     def get_load_data_by_load(cls, load_id):
@@ -184,7 +185,7 @@ class LoadData(db.Model):
         return loads
     
     def __repr__(self):
-        return f'<Load DATA. id:{self.id}, load_id: {self.load_id}, user_id:{self.user_id}>'
+        return f'<Load Data id:{self.id}, load_id: {self.load_id}, user_id:{self.user_id}>'
 
     
     

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}You KPI's{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Your load KPI's....</h1>
+    <p>These figures represent your historical load completions. These can be used for internal purposes or you can share these KPI's with your clients!</p>
+    <div class="kpi">
+        <div class="item">
+            <h2>On Time Percentage</h2>
+            <p>%{{ontime}}</p>
+        </div>
+        <div class="item">
+            <h2>Breakdown Percentage</h2>
+            <p>%{{breakdown}}</p>
+        </div>
+        <div class="item">
+            <h2>Damage Percentage</h2>
+            <p>%{{damages}}</p>
+        </div>
+        <div class="item">
+            <h2>Avg Cost Per Load</h2>
+            <p>${{avg_load}}</p>
+        </div>
+        <div class="item">
+            <h2>Avg Cost Per Pallet</h2>
+            <p>${{avg_pallet}}</p>
+        </div>
+        <div class="item">
+            <h2>Avg Cost Per Pound</h2>
+            <p>${{avg_weight}}</p>
+        </div>
+    </div>
+</div>
+{% endblock%}
