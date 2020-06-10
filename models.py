@@ -87,8 +87,8 @@ class Carrier(db.Model):
     __tablename__ = 'carriers'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
-    name = db.Column(db.Text, unique=True, nullable=False)
-    address = db.Column(db.Text, unique=True, nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    address = db.Column(db.Text, nullable=False)
     city = db.Column(db.Text, nullable=False)
     state = db.Column(db.Text, nullable=False)
     zip = db.Column(db.Text, nullable=False)
@@ -115,7 +115,7 @@ class Load(db.Model):
     __tablename__ = 'loads'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    po = db.Column(db.Text, unique=True, nullable=False)
+    po = db.Column(db.Text, nullable=False)
     name = db.Column(db.Text, nullable=False)   
     pickup_city = db.Column(db.Text, nullable=False)   
     pickup_state = db.Column(db.Text, nullable=False)
@@ -153,7 +153,7 @@ class LoadData(db.Model):
     __tablename__ = 'load_data'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
-    load_id = db.Column(db.Integer, db.ForeignKey('loads.id'), nullable=False)
+    load_id = db.Column(db.Integer, db.ForeignKey('loads.id'), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     # 
     # Meaning of Inegers for load data
@@ -163,6 +163,7 @@ class LoadData(db.Model):
     ontime = db.Column(db.Integer, default=0)
     damges = db.Column(db.Integer, default=0)
     breakdown = db.Column(db.Integer, default=0)
+
     # Normal Int values
     cost = db.Column(db.Integer, default=0)
     pallets = db.Column(db.Integer, default=0)

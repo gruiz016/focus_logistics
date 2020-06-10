@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Load Data{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 
 <div class="container login">
+    <h1>Add/Edit Load Data!</h1>
+    <p class="text-center">This page helps keep track of all your KPI's! Please fill out all parts below prior to declaring a load is completed!</a></p>
     <form method="POST">
-        <h1>Add Load Data Below...</h1>
         {{ form.hidden_tag() }}
 
         {% for field in form
-           if field.widget.input_type != 'hidden' %}
+               if field.widget.input_type != 'hidden' %}
 
         <p class="form-group">
             {{ field.label }}

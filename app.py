@@ -87,7 +87,7 @@ def user_portal():
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     # Grabs all loads.
-    loads = Load.query.all()
+    loads = Load.query.filter_by(delivered=0).all()
     # Sets forms carrier and DC options.
     tup_carriers = get_user_carriers()
     tup_dc = get_dc()
@@ -112,6 +112,10 @@ def user_portal():
         load = Load(po=po, name=name, pickup_city=city, pickup_state=state, due_date=due_date, day_of_week=day_of_week, temp=temp, team=team, miles=miles, carrier_id=carrier_id, d_c_id=d_c_id)
         if load:
             db.session.add(load)
+            db.session.commit()
+            # After the load has been commited we create the load data so that a user can add/edit from one route.
+            data = LoadData(load_id=load.id, user_id=session['user_id'])
+            db.session.add(data)
             db.session.commit()
             flash('Load created!', 'alert-success')
             return redirect('/manage')
@@ -172,6 +176,27 @@ def carriers():
             return redirect('/carriers')
     return render_template('user/carriers.html', form=form, carriers=carriers)
 
+@app.route('/update_load/<int:load_id>', methods=['GET', 'POST'])
+def update_load(load_id):
+    '''Renders and handles the load data updates.'''
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/') 
+    data = LoadData.query.filter_by(load_id=load_id).first()
+    form = LoadDataForm(obj=data)
+    if form.validate_on_submit():
+        data.ontime = form.ontime.data
+        data.damges = form.damages.data
+        data.breakdown = form.breakdown.data
+        data.cost = form.cost.data
+        data.pallets = form.pallets.data
+        data.weight = form.weight.data
+        # Once object has been updated we commit.
+        db.session.commit()
+        flash('Load Data added.', 'alert-success')
+        return redirect('/manage')
+    return render_template('user/load.html', form=form)
+
 @app.route('/update_location/<int:load_id>', methods=['GET', 'POST'])
 def update_location(load_id):
     '''Renders and handles updates to load locations.'''
@@ -191,27 +216,16 @@ def update_location(load_id):
         return redirect('/manage')
     return render_template('user/update.html', form=form)
 
-@app.route('/add_data/<int:load_id>', methods=['GET', 'POST'])
-def add_load_data(load_id):
-    '''Renders and handles adding load data for each load.'''
-    # Checks if user has been autherized prior to allowing entrance to route.
+@app.route('/delivered/<int:load_id>', methods=['POST'])
+def completed(load_id):
+    '''Handles when a load is marked as delivered.'''
     if 'user_id' not in session:
         flash('You must be logged to access', 'alert-danger')
-        return redirect('/')    
-    form = LoadDataForm()
-    if form.validate_on_submit():
-        ontime = form.ontime.data
-        damges = form.damages.data
-        breakdown = form.breakdown.data
-        cost = form.cost.data
-        pallets = form.pallets.data
-        weight = form.weight.data
-        # Creates load data object
-        data = LoadData(load_id=load_id, user_id=session['user_id'], ontime=ontime, damges=damges, breakdown=breakdown, cost=cost, pallets=pallets, weight=weight)
-        # Confirms object was created before we commit.
-        if data:
-            db.session.add(data)
-            db.session.commit()
-            flash('Load Data added.', 'alert-success')
-            return redirect('/manage')
-    return render_template('user/load_data.html', form=form)
+        return redirect('/')
+    load = Load.query.filter_by(id=load_id).first()
+    # Changes the delivered status.
+    load.delivered = 1
+    # Commits the change.
+    db.session.commit()
+    flash('Load delivered!', 'alert-success')
+    return redirect('/manage')   

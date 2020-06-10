@@ -14,6 +14,7 @@
     <table class="table tabke-light">
         <thead>
             <tr>
+                <th scope="col" class="text-white">FL #</th>
                 <th scope="col" class="text-white">P.O. #</th>
                 <th scope="col" class="text-white">Load Name</th>
                 <th scope="col" class="text-white">Current Location</th>
@@ -23,13 +24,14 @@
                 <th scope="col" class="text-white">Temp</th>
                 <th scope="col" class="text-white">Team</th>
                 <th scope="col" class="text-white">Update Location</th>
-                <th scope="col" class="text-white">Load Data</th>
+                <th scope="col" class="text-white">Delivered</th>
             </tr>
         </thead>
         <tbody>
             {% for load in loads|sort(attribute='due_date,miles') %}
             <tr>
-                <td class="text-white">{{load.po}}</td>
+                <td class="text-white">{{load.id}}</td>
+                <td class="text-white"><a href="/update_load/{{load.id}}">{{load.po}}</a></td>
                 <td class="text-white">{{load.name}}</td>
                 <td class="text-white">{{load.pickup_city}}, {{load.pickup_state}}</td>
                 <td class="text-white">{{load.miles}}</td>
@@ -45,7 +47,9 @@
                     <a href="/update_location/{{load.id}}" class="btn btn-primary">Update</a>
                 </td>
                 <td class="text-white">
-                    <a href="/add_data/{{load.id}}" class="btn btn-primary">Add/Edit</a>
+                    <form action="/delivered/{{load.id}}" method="POST">
+                        <button class="btn btn-primary">Complete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
