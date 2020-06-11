@@ -3,7 +3,7 @@ from models import db, connect_db, User, DistributionCenter, Load, Carrier, Load
 from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm, UpdateLocationForm, LoadDataForm
 from helper import get_user_carriers, get_dc, get_miles, ontime_KPI, damages_KPI, breakdown_KPI, avg_cost_load, cost_per_pallet, cost_per_lbs, try_commit, try_commit_rollback, try_signup
 import os
-from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
+# from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
 
 app = Flask(__name__)
 
@@ -11,8 +11,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'This_is_a_secret!')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['CONSUMER_KEY'] = os.environ.get('CONSUMER_KEY', MAP_QUEST_KEY)
-app.config['CONSUMER_SECRET'] = os.environ.get('CONSUMER_SECRET', MAP_QUEST_SECRET)
+app.config['CONSUMER_KEY'] = os.environ.get('CONSUMER_KEY')
+app.config['CONSUMER_SECRET'] = os.environ.get('CONSUMER_SECRET')
 
 connect_db(app)
 
@@ -241,4 +241,13 @@ def show_kpi():
 # 
 # 404 PAGE
 # 
-
+@app.errorhandler(404)
+def page_not_found(e):
+    '''Custom 404 page'''
+    return render_template('404.html'), 404
+# 
+# FAQ'S
+# 
+@app.route('/faqs')
+def faq():
+    return render_template('user/faqs.html')

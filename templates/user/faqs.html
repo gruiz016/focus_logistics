@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ's | FL's How To's! {% endblock %}
+
+{% block content %}
+<div class="container faqs">
+    <h1 class="text-center my-3">FAQ's</h1>
+    <div class="list">
+        <div class="questions">
+            <h2>Why can't I add loads without a location or carrier?</h2>
+            <p>We designed it so that you only have to add your distribution center or location the load is delivering
+                once. This way you can reuse the data by simply selecting it from the dropdown menu. You must add
+                locations and carriers first before adding your load data.</p>
+        </div>
+        <div class="questions">
+            <h2>How do I add load data?</h2>
+            <p>Simply click the P.O. # of the load you want to add load data for and click submit. You can change the
+                data all the way until you complete or mark the load delivered.</p>
+        </div>
+        <div class="questions">
+            <h2>I want to have mulitple people working at the same time, but different people can't have the same DC or loaction. How can I fix this?</h2>
+            <p>Right now Focus Logistics is designed that only one user should "own" a location. We will add a feature that gives a user permission to add users to thier logistics portal. Be patient, for now use one login in account for your entire staff.</p>
+        </div>
+        <div class="questions">
+            <h2>Why can't I delete loads?</h2>
+            <p>Right now we want to collect as much data as possible, so our users can not delete loads. This is to make sure your KPI's are always accurate. If loads were created by mistake, reach out to us and we can remove from your portal.</p>
+        </div>
+        <div class="questions">
+            <h2>Will you add more advanced features?</h2>
+            <p>Short answer, YES! We are allowing users to make suggestions on fatures or KPI's that will make using our service more convient.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
