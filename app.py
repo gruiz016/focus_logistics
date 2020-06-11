@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash, session, jsonify
 from models import db, connect_db, User, DistributionCenter, Load, Carrier, LoadData
 from forms import LoginForm, SignupForm, DCCarrierForm, LoadForm, UpdateLocationForm, LoadDataForm
-from helper import get_user_carriers, get_dc, get_miles, ontime_KPI, damages_KPI, breakdown_KPI, avg_cost_load, cost_per_pallet, cost_per_lbs
+from helper import get_user_carriers, get_dc, get_miles, ontime_KPI, damages_KPI, breakdown_KPI, avg_cost_load, cost_per_pallet, cost_per_lbs, try_commit, try_commit_rollback, try_signup
 import os
 from secret import MAP_QUEST_KEY, MAP_QUEST_SECRET
 
@@ -61,16 +61,16 @@ def signup():
         user = User.singup(username=username, password=password)
         # Verifies if user was created before commiting to database
         if user:
-            session['user_id'] = user.id
             db.session.add(user)
-            db.session.commit()
-            flash(f'{username} was created!', 'alert-success')
-            return redirect('/manage')
+            return try_signup(id=user.id, success='User was created!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.', route='/', duplicate='You already have an account. Please login!')
     return render_template('signup.html', form=form)
 
 @app.route('/logout', methods=['POST'])
 def logout():
     '''Handles logging out a user.'''
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')
     session.pop('user_id')
     flash("You've been logged out!", 'alert-success')
     return redirect('/')
@@ -87,7 +87,7 @@ def user_portal():
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     # Grabs all loads.
-    loads = Load.query.filter_by(delivered=0).all()
+    loads = Load.query.filter(Load.delivered==0, Load.user_id==session['user_id']).all()
     # Sets forms carrier and DC options.
     tup_carriers = get_user_carriers()
     tup_dc = get_dc()
@@ -109,15 +109,18 @@ def user_portal():
         # Calls MapQuest API to get distance
         miles = get_miles(app=app.config['CONSUMER_KEY'], dc_id=d_c_id, city=city, state=state)
         # Creates load object 
-        load = Load(po=po, name=name, pickup_city=city, pickup_state=state, due_date=due_date, day_of_week=day_of_week, temp=temp, team=team, miles=miles, carrier_id=carrier_id, d_c_id=d_c_id)
+        load = Load(po=po, name=name, pickup_city=city, pickup_state=state, due_date=due_date, day_of_week=day_of_week, temp=temp, team=team, miles=miles, carrier_id=carrier_id, d_c_id=d_c_id, user_id=session['user_id'])
         if load:
-            db.session.add(load)
-            db.session.commit()
-            # After the load has been commited we create the load data so that a user can add/edit from one route.
-            data = LoadData(load_id=load.id, user_id=session['user_id'])
-            db.session.add(data)
-            db.session.commit()
-            flash('Load created!', 'alert-success')
+            try:
+                db.session.add(load)
+                db.session.commit()
+                # After the load has been commited we create the load data so that a user can add/edit from one route.
+                data = LoadData(load_id=load.id, user_id=session['user_id'])
+                db.session.add(data)
+                db.session.commit()
+                flash('Load created!', 'alert-success')
+            except Exception as ex:
+                flash('Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.', 'alert-danger')
             return redirect('/manage')
     return render_template('user/portal.html', form=form, loads=loads)
 
@@ -128,7 +131,6 @@ def locations():
     if 'user_id' not in session:
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
-    
     form = DCCarrierForm()
     # Grabs all user DC locations
     dc = DistributionCenter.get_dist_by_user(user_id=session['user_id'])
@@ -144,9 +146,7 @@ def locations():
         # If location was created, we commit.
         if dc:
             db.session.add(dc)
-            db.session.commit()
-            flash('Location created!', 'alert-success')
-            return redirect('/locations')
+            return try_commit_rollback(success='Location created!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.', route='/locations', duplicate="Location has already been added by another user. Locations have to be unqiue to each user. See our FAQ's for more info.")
     return render_template('user/locations.html', form=form, dc=dc)
 
 @app.route('/carriers', methods=['GET', 'POST'])
@@ -171,9 +171,7 @@ def carriers():
         # If carrier was created we commit it.
         if carrier:
             db.session.add(carrier)
-            db.session.commit()
-            flash('Carrier created!', 'alert-success')
-            return redirect('/carriers')
+            return try_commit_rollback(success='Carrier created!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.', route='/carriers')
     return render_template('user/carriers.html', form=form, carriers=carriers)
 
 @app.route('/update_load/<int:load_id>', methods=['GET', 'POST'])
@@ -192,9 +190,7 @@ def update_load(load_id):
         data.pallets = form.pallets.data
         data.weight = form.weight.data
         # Once object has been updated we commit.
-        db.session.commit()
-        flash('Load Data added.', 'alert-success')
-        return redirect('/manage')
+        return try_commit(success='Load Data added!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.')
     return render_template('user/load.html', form=form)
 
 @app.route('/update_location/<int:load_id>', methods=['GET', 'POST'])
@@ -211,9 +207,7 @@ def update_location(load_id):
         load.pickup_state = form.state.data
         load.miles = get_miles(app=app.config['CONSUMER_KEY'], dc_id=load.d_c_id, city=load.pickup_city, state=load.pickup_state)
         # Commits changes.
-        db.session.commit()
-        flash('Load updated', 'alert-success')
-        return redirect('/manage')
+        return try_commit(success='Location updated!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.')
     return render_template('user/update.html', form=form)
 
 @app.route('/delivered/<int:load_id>', methods=['POST'])
@@ -223,17 +217,19 @@ def completed(load_id):
         flash('You must be logged to access', 'alert-danger')
         return redirect('/')
     load = Load.query.filter_by(id=load_id).first()
-    load_data = LoadData.query.filter_by(id=load_id).first()
+    load_data = LoadData.query.filter_by(load_id=load_id).first()
     # Changes the delivered status.
     load.delivered = 1
     load_data.delivered = 1
     # Commits the change.
-    db.session.commit()
-    flash('Load delivered!', 'alert-success')
-    return redirect('/manage')   
+    return try_commit(success='Load was delivered!', fail='Something went wrong, please try again later. If this continues please email meet.gio@icloud.com.')
 
 @app.route('/kpi')
 def show_kpi():
+    '''Gathers KPI's and renders results.'''
+    if 'user_id' not in session:
+        flash('You must be logged to access', 'alert-danger')
+        return redirect('/')
     ontime = ontime_KPI()
     breakdown = breakdown_KPI()
     damages = damages_KPI()
@@ -241,3 +237,8 @@ def show_kpi():
     pallet_cost = cost_per_pallet()
     weight_cost = cost_per_lbs()
     return render_template('user/kpi.html', ontime=ontime, breakdown=breakdown, damages=damages, avg_load=avg_load_cost, avg_pallet=pallet_cost, avg_weight=weight_cost)
+
+# 
+# 404 PAGE
+# 
+

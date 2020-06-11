@@ -31,9 +31,12 @@ class User(db.Model):
         
         user = cls(username=username, password=hashed_pwd)
         
-        db.session.add(user)
-        db.session.commit()
-        
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as ex:
+            db.session.rollback()
+    
         return user
 
     @classmethod
@@ -125,6 +128,7 @@ class Load(db.Model):
     team = db.Column(db.Integer, nullable=False)
     miles = db.Column(db.Integer, nullable=False, default=0)
     delivered = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     carrier_id = db.Column(db.Integer, db.ForeignKey('carriers.id'), nullable=False)
     d_c_id = db.Column(db.Integer, db.ForeignKey('distribution_centers.id'), nullable=False)
     
