@@ -36,4 +36,13 @@ With the data collected from each load we look at several initial performance in
  - Average cost per pallet
  - Average cost per pound 
 
+ # User workflow
  
+ 1. signup/login
+ 2. Create a D.C.
+ 3. Create a Carrier
+ 4. Create a Load
+ 5. Update load data
+ 6. Update load location
+ 7. Complete the load/mark as delivered
+ 8. Go to KPI's and see your data.
