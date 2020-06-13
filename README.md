@@ -1,8 +1,11 @@
 # [Focus Logistics](https://focus-logistics.herokuapp.com/) - Logistics Management Platform
 
 Created by: [Giovanni Ruiz](https://www.linkedin.com/in/giovanniruiz01/)
+
 Technologies used: HTML, CSS, Python, Flask and PostgreSQL.
+
 API used: [MapQuest API](https://developer.mapquest.com/)
+
 
 # Short Description
  This capstone project is a management tool to help small or logistics managers track their fleets across the country. Focus Logistics is designed for teams that currently use excel spreadsheets or handle load tracking manually. By making a web platform users will have better visibility, automatic distance calculations and simple data analytics.  
